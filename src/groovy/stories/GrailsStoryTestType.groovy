@@ -5,6 +5,7 @@ import org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport
 import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
 import org.codehaus.groovy.grails.test.GrailsTestTargetPattern
 import stories.GrailsStoryTestTypeResult
+import groovy.lang.GroovyShell
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
     GrailsStoryTestType(String name, String relativeSourcePath) {
@@ -20,16 +21,19 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
     }
 
     protected int doPrepare() {
-        for (GrailsTestTargetPattern targetPattern : this.getTestTargetPatterns()) {
-            for (File file : findSourceFiles(targetPattern)) {
-                println file
-            }
+        def shell = new GroovyShell()
+        def counter = new GrailsStoryCounter()
+        eachSourceFile { pattern, file ->
+            def source = file.text
+            def story = (Closure) shell.evaluate("{ it -> ${source} }")
+            story.delegate = counter
+            story()
         }
-        //TODO: return the real number of tests
-        return 1;
+        return counter.tests;
     }
 
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
+        //TODO: run the tests... show results
         return new GrailsStoryTestTypeResult()    
     }
 }
