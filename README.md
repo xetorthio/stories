@@ -19,11 +19,11 @@ You can use the before and after closures to execute code before and after every
 
     story "This is a story", {
         before {
-            println "BEFORE"
+            //TODO: do something before every scenario
         }
 
         after {
-            println "AFTER"
+            //TODO: do something after every scenario
         }
 
         scenario "This is one scenario", {
