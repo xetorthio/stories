@@ -37,16 +37,17 @@ You can use the before and after closures to execute code before and after every
 
 When you run your tests all the stories will be executed as well.
 In this case you will see something like:
--------------------------------------------------------
-Running 2 stories tests...
-This is a story
-    A scenario in the story - PASSED
-    Another scenario in the story - FAILED..... Expression: (1 == 0)
-Tests Completed in 46ms ...
--------------------------------------------------------
-Tests passed: 1
-Tests failed: 1
--------------------------------------------------------
+
+    -------------------------------------------------------
+    Running 2 stories tests...
+    This is a story
+        A scenario in the story - PASSED
+        Another scenario in the story - FAILED..... Expression: (1 == 0)
+    Tests Completed in 46ms ...
+    -------------------------------------------------------
+    Tests passed: 1
+    Tests failed: 1
+    -------------------------------------------------------
 
 
 License
