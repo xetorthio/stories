@@ -4,12 +4,15 @@ import org.codehaus.groovy.grails.test.GrailsTestTypeResult
 import org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport
 import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
 import org.codehaus.groovy.grails.test.GrailsTestTargetPattern
-import stories.GrailsStoryTestTypeResult
 import groovy.lang.GroovyShell
+import stories.runners.MockRunner
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
+    def stories
+
     GrailsStoryTestType(String name, String relativeSourcePath) {
         super(name, relativeSourcePath)
+        stories = []
     }
 
     protected List<String> getTestExtensions() {
@@ -26,6 +29,7 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
         eachSourceFile { pattern, file ->
             def source = file.text
             def story = (Closure) shell.evaluate("{ it -> ${source} }")
+            stories << story
             story.delegate = counter
             story()
         }
@@ -33,7 +37,11 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
     }
 
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
-        //TODO: run the tests... show results
-        return new GrailsStoryTestTypeResult()    
+        def runner = new MockRunner()
+        stories.each {
+            it.delegate = runner
+            it()
+        }
+        return runner
     }
 }
