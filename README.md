@@ -6,7 +6,9 @@ What you do inside each scenario is your problem :)... you can use either Seleni
 
 ## Using
 
-There isn't any release right now. But stay close because a first release is comming soon!
+To install just type:
+
+    grails install-plugin http://github.com/downloads/xetorthio/stories/grails-stories-0.1.zip
 
 To create a new story, just type:
     grails create-story SomeStory
