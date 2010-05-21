@@ -1,50 +1,18 @@
 class StoriesGrailsPlugin {
-    // the plugin version
-    def version = "0.1"
-    // the version or versions of Grails the plugin is designed for
+    def version = 0.1
+    def title = "A BDD plugin for grails"
     def grailsVersion = "1.2.2 > *"
-    // the other plugins this plugin depends on
-    def dependsOn = [:]
-    // resources that are excluded from plugin packaging
+    def author = "Jonathan Leibiusky"
+    def authorEmail = "ionathan@gmail.com"
+    def description = "Stories is a BDD plugin for Grails that aims to make you life easier with functional testing. Stories does't depend on any testing framework out there. It tries to use them all, offerind a way to organize your tests as Stories and Scenarios. What you do inside each scenario is your problem :)... you can use either Selenium, WebTest, HtmlUnit, etc."
+    def documentation = "http://github.com/xetorthio/stories"
+    def loadAfter = ['core', 'hibernate']
     def pluginExcludes = [
-            "grails-app/views/error.gsp"
+        'grails-app/**/*',
+        'lib/**/*',
+        'web-app/**/*',
+        'target/**/*',
+        'test/**/*'
     ]
-
-    // TODO Fill in these fields
-    def author = "Your name"
-    def authorEmail = ""
-    def title = "Plugin summary/headline"
-    def description = '''\\
-Brief description of the plugin.
-'''
-
-    // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/stories"
-
-    def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before 
-    }
-
-    def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
-    }
-
-    def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
-    }
-
-    def doWithApplicationContext = { applicationContext ->
-        // TODO Implement post initialization spring config (optional)
-    }
-
-    def onChange = { event ->
-        // TODO Implement code that is executed when any artefact that this plugin is
-        // watching is modified and reloaded. The event contains: event.source,
-        // event.application, event.manager, event.ctx, and event.plugin.
-    }
-
-    def onConfigChange = { event ->
-        // TODO Implement code that is executed when the project configuration changes.
-        // The event is the same as for 'onChange'.
-    }
+    def dependsOn = [:]
 }
