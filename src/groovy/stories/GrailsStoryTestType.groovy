@@ -24,24 +24,37 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
     }
 
     protected int doPrepare() {
-        def shell = new GroovyShell()
+        def cl = Thread.currentThread().contextClassLoader
+
+        //loads the shell with the current classLoader so we have all the domain classes, etc.
+        def shell = new GroovyShell(cl)
+
         def counter = new GrailsStoryCounter()
+
+        //sets proxies to the counter class so we can load the Story as a regular groovy script
+        shell.setVariable("story", { name, yield -> counter.story(name, yield) })
+        shell.setVariable("scenario", { name, yield -> counter.scenario(name, yield) })
+
         eachSourceFile { pattern, file ->
             def source = file.text
-            def story = (Closure) shell.evaluate("{ it -> ${source} }")
+            def story = shell.parse(source)
+            story.run()
             stories << story
-            story.delegate = counter
-            story()
         }
+       
         return counter.tests;
     }
 
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
         def runner = new MockRunner()
+        
         stories.each {
-            it.delegate = runner
-            it()
+            //sets proxies to the runner
+            it.setProperty("story", { name, yield -> runner.story(name, yield) })
+            it.setProperty("scenario", { name, yield -> runner.scenario(name, yield) })
+            it.run()
         }
+        
         return runner
     }
 }
