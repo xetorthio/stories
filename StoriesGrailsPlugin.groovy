@@ -1,5 +1,5 @@
 class StoriesGrailsPlugin {
-    def version = 0.11
+    def version = 0.12
     def title = "A BDD plugin for grails"
     def grailsVersion = "1.2.2 > *"
     def author = "Jonathan Leibiusky"
