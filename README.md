@@ -64,9 +64,11 @@ Now lets create a story and start testing!
 
 We edit test/stories/FacebookTestStory.groovy and put some code
 
+    import groovyx.net.http.RESTClient
+
     story "As a consumer I want to get details of a user so I can show the user information in my own site", {
         scenario "Get user information anonymously without filtering", {
-            def facebook = new groovyx.net.http.RESTClient("https://graph.facebook.com/")
+            def facebook = new RESTClient("https://graph.facebook.com/")
             def response = facebook.get(path:"jleibiusky")
 
             assert response.status == 200
@@ -75,7 +77,7 @@ We edit test/stories/FacebookTestStory.groovy and put some code
         }
         
         scenario "Get user information anonymously filtering by fields", {
-            def facebook = new groovyx.net.http.RESTClient("https://graph.facebook.com/")
+            def facebook = new RESTClient("https://graph.facebook.com/")
             def response = facebook.get(path:"jleibiusky", query:[fields:"name"])
 
             assert response.status == 200
