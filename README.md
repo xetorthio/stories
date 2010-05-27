@@ -8,7 +8,7 @@ What you do inside each scenario is your problem :)... you can use either Seleni
 
 To install just type:
 
-    grails install-plugin http://github.com/downloads/xetorthio/stories/grails-stories-0.1.zip
+    grails install-plugin http://github.com/downloads/xetorthio/stories/grails-stories-0.11.zip
 
 To create a new story, just type:
     grails create-story SomeStory
