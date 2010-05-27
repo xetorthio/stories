@@ -34,6 +34,9 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
         //sets proxies to the counter class so we can load the Story as a regular groovy script
         shell.setVariable("story", { name, yield -> counter.story(name, yield) })
         shell.setVariable("scenario", { name, yield -> counter.scenario(name, yield) })
+        shell.setVariable("before", { -> counter.before() })
+        shell.setVariable("after", { -> counter.after() })
+
 
         eachSourceFile { pattern, file ->
             def source = file.text
@@ -52,6 +55,8 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
             //sets proxies to the runner
             it.setProperty("story", { name, yield -> runner.story(name, yield) })
             it.setProperty("scenario", { name, yield -> runner.scenario(name, yield) })
+            it.setProperty("before", { -> runner.before() })
+            it.setProperty("after", { -> runner.after() })
             it.run()
         }
         
