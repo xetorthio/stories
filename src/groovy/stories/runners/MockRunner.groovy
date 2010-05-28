@@ -21,8 +21,9 @@ class MockRunner implements GrailsTestTypeResult {
         yield()
     }
 
+
     def scenario(name, yield) {
-        if(_before != null) {
+        if(_before) {
             _before()
         }
         try {
@@ -33,7 +34,7 @@ class MockRunner implements GrailsTestTypeResult {
             println "\t${name} - FAILED..... " + ex.message
             failed++
         }
-        if(_after != null) {
+        if(_after) {
             _after()
         }
     }

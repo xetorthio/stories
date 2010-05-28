@@ -9,6 +9,7 @@ import stories.runners.MockRunner
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
     def stories
+    def tests = 0
 
     GrailsStoryTestType(String name, String relativeSourcePath) {
         super(name, relativeSourcePath)
@@ -24,23 +25,40 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
     }
 
     protected int doPrepare() {
-        def shell = new GroovyShell()
+        def cl = Thread.currentThread().contextClassLoader
+        def shell = new GroovyShell( cl )
         def counter = new GrailsStoryCounter()
         eachSourceFile { pattern, file ->
             def source = file.text
-            def story = (Closure) shell.evaluate("{ it -> ${source} }")
+            Script story = shell.parse(source)
+
             stories << story
-            story.delegate = counter
-            story()
+            story.metaClass = createEMC(story.class, counter)
+            
+            story.run()
         }
+
         return counter.tests;
+    }
+
+    def createEMC(Class clazz, delegator){
+      def emc = new ExpandoMetaClass(clazz, false)
+
+      emc.story = { name, cl ->
+        cl.delegate = delegator
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        delegator.story(name, cl)
+      }
+
+      emc.initialize()
+      emc
     }
 
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
         def runner = new MockRunner()
         stories.each {
-            it.delegate = runner
-            it()
+          it.metaClass = createEMC(it.class, runner)          
+          it.run()
         }
         return runner
     }
