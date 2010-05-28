@@ -6,7 +6,9 @@ What you do inside each scenario is your problem :)... you can use either Seleni
 
 ## Using
 
-There isn't any release right now. But stay close because a first release is comming soon!
+To install just type:
+
+    grails install-plugin http://github.com/downloads/xetorthio/stories/grails-stories-0.12.zip
 
 To create a new story, just type:
     grails create-story SomeStory
@@ -49,6 +51,42 @@ In this case you will see something like:
     Tests failed: 1
     -------------------------------------------------------
 
+## Testing a REST API
+This seems to be a hot topic right now. So lets do that with Storis!
+As I said earlier, stories actually doesn't provide any specific language to write your tests. It's just a way to organize yourself (and in the future there will be some nice helpers for specific things :) ).
+So in this example I will use groovy RestClient. In grails this is provided through a plugin called "rest".
+
+    grails install-plugin rest
+
+Now lets create a story and start testing!
+
+    grails create-story FacebookTest
+
+We edit test/stories/FacebookTestStory.groovy and put some code
+
+    import groovyx.net.http.RESTClient
+
+    story "As a consumer I want to get details of a user so I can show the user information in my own site", {
+        scenario "Get user information anonymously without filtering", {
+            def facebook = new RESTClient("https://graph.facebook.com/")
+            def response = facebook.get(path:"jleibiusky")
+
+            assert response.status == 200
+            assert response.data.name == "Jonathan Leibiusky"
+            assert response.data.first_name == "Jonathan"
+        }
+        
+        scenario "Get user information anonymously filtering by fields", {
+            def facebook = new RESTClient("https://graph.facebook.com/")
+            def response = facebook.get(path:"jleibiusky", query:[fields:"name"])
+
+            assert response.status == 200
+            assert response.data.name == "Jonathan Leibiusky"
+            assert response.data.first_name == null
+        }
+    }
+
+And we are done!
 
 License
 -------

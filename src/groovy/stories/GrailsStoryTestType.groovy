@@ -26,15 +26,16 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
 
     protected int doPrepare() {
         def cl = Thread.currentThread().contextClassLoader
-        def shell = new GroovyShell( cl )
+        //loads the shell with the current classLoader so we have all the domain classes, etc.
+        def shell = new GroovyShell(cl)
         def counter = new GrailsStoryCounter()
+
         eachSourceFile { pattern, file ->
             def source = file.text
             Script story = shell.parse(source)
 
             stories << story
             story.metaClass = createEMC(story.class, counter)
-            
             story.run()
         }
 
@@ -57,7 +58,7 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
         def runner = new MockRunner()
         stories.each {
-          it.metaClass = createEMC(it.class, runner)          
+          it.metaClass = createEMC(it.class, runner)
           it.run()
         }
         return runner
