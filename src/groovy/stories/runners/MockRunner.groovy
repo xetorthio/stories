@@ -1,6 +1,9 @@
 package stories.runners
 
-import org.codehaus.groovy.grails.test.GrailsTestTypeResult;
+import org.codehaus.groovy.grails.test.GrailsTestTypeResult
+import org.junit.runner.JUnitCore
+import org.junit.internal.runners.JUnit38ClassRunner
+import junit.framework.TestCase
 
 class MockRunner implements GrailsTestTypeResult {
     def _before
@@ -20,8 +23,7 @@ class MockRunner implements GrailsTestTypeResult {
         println "${name}"
         yield()
     }
-
-
+  
     def scenario(name, yield) {
         if(_before) {
             _before()
@@ -31,7 +33,12 @@ class MockRunner implements GrailsTestTypeResult {
             println "\t${name} - PASSED"
             passed++
         } catch(AssertionError ex) {
-            println "\t${name} - FAILED..... " + ex.message
+            def msg = "\t${name} - FAILED..... " + ex.message
+            println msg          
+            failed++
+        } catch (Exception e){
+            def msg = "\t${name} - EXCEPTION..... " + e.message
+            println msg
             failed++
         }
         if(_after) {
