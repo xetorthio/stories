@@ -22,6 +22,9 @@ class StoryRestClientHelper {
 
     StoryRestClientHelper( ){
         def urlBase = makeServerURL()
+        if (!urlBase.endsWith("/")){
+            urlBase += "/" //Must end in slash for the rest client.
+        }
         client = new groovyx.net.http.RESTClient( urlBase )
     }
 
@@ -47,13 +50,14 @@ class StoryRestClientHelper {
 
     def get( params, validations ){
         validateParams(params)
+        def resp
         try{
-            def resp = client.get ([path: params.resource])
-            validations.delegate = resp
-            validations()
+            resp = client.get ([path: params.resource])
         } catch( HttpResponseException e ){
-            validations(e.response)
+            resp = e.response
         }
+        validations.delegate = resp
+        validations()
     }
 
     def post( params, data, validations ){

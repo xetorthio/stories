@@ -8,9 +8,8 @@ story "This is a story", {
     after {
 
     }
-    
     scenario "A scenario in the story", {
-        get(resource: "restTest/"){
+        get(resource: "restTest/index"){
             assert status == 200
             assert data.ok == "1"            
         }
