@@ -3,6 +3,12 @@ package stories
 class GrailsStoryCounter {
     def tests = 0
 
+    def beforeStory(yield){
+    }
+
+    def afterStory(yield){
+    }
+
     def before(yield) {
     }
 
@@ -16,4 +22,5 @@ class GrailsStoryCounter {
     def scenario(name, yield) {
         tests++
     }
+
 }

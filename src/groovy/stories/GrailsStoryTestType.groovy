@@ -6,6 +6,8 @@ import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
 import org.codehaus.groovy.grails.test.GrailsTestTargetPattern
 import groovy.lang.GroovyShell
 import stories.runners.MockRunner
+import org.codehaus.groovy.grails.commons.ApplicationHolder
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
     def stories
@@ -25,6 +27,7 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
     }
 
     protected int doPrepare() {
+        
         def cl = Thread.currentThread().contextClassLoader
         //loads the shell with the current classLoader so we have all the domain classes, etc.
         def shell = new GroovyShell(cl)
