@@ -8,7 +8,7 @@ What you do inside each scenario is your problem :)... you can use either Seleni
 
 To install just type:
 
-    grails install-plugin http://github.com/downloads/xetorthio/stories/grails-stories-0.12.zip
+    grails install-plugin http://github.com/downloads/xetorthio/stories/grails-stories-0.15.zip
 
 To create a new story, just type:
     grails create-story SomeStory
@@ -64,25 +64,21 @@ Now lets create a story and start testing!
 
 We edit test/stories/FacebookTestStory.groovy and put some code
 
-    import groovyx.net.http.RESTClient
-
     story "As a consumer I want to get details of a user so I can show the user information in my own site", {
         scenario "Get user information anonymously without filtering", {
-            def facebook = new RESTClient("https://graph.facebook.com/")
-            def response = facebook.get(path:"jleibiusky")
-
-            assert response.status == 200
-            assert response.data.name == "Jonathan Leibiusky"
-            assert response.data.first_name == "Jonathan"
+            get (resource:"https://graph.facebook.com/jleibiusky") {
+                assert status == 200
+                assert data.name == "Jonathan Leibiusky"
+                assert data.first_name == "Jonathan"
+            }
         }
         
         scenario "Get user information anonymously filtering by fields", {
-            def facebook = new RESTClient("https://graph.facebook.com/")
-            def response = facebook.get(path:"jleibiusky", query:[fields:"name"])
-
-            assert response.status == 200
-            assert response.data.name == "Jonathan Leibiusky"
-            assert response.data.first_name == null
+            get (resource:"https://graph.facebook.com/jleibiusky", query:[fields:"name"]) {
+                assert status == 200
+                assert data.name == "Jonathan Leibiusky"
+                assert data.first_name == null
+            }
         }
     }
 
