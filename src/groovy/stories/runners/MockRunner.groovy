@@ -3,6 +3,7 @@ package stories.runners
 import org.codehaus.groovy.grails.test.GrailsTestTypeResult
 
 class MockRunner implements GrailsTestTypeResult {
+        
     def _beforeStory
     def _afterStory
     def _before

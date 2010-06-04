@@ -1,10 +1,7 @@
 package stories.runners
 
 import org.apache.http.client.HttpResponseException
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import org.codehaus.groovy.grails.commons.ApplicationHolder
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import grails.util.Environment
 
@@ -48,11 +45,12 @@ class StoryRestClientHelper {
         }
     }
 
-    def get( params, validations ){
+    private def execute(params, validations, block){
         validateParams(params)
         def resp
         try{
-            resp = client.get ([path: params.resource])
+            def resource = params.resource
+            resp = block(resource)
         } catch( HttpResponseException e ){
             resp = e.response
         }
@@ -60,9 +58,23 @@ class StoryRestClientHelper {
         validations()
     }
 
+    def get( params, validations ){
+        execute(params, validations) {
+            client.get([path: it])
+        }
+    }
+
     def post( params, data, validations ){
-        validateParams(params)
-        //TODO: implementar
+        execute(params, validations) {
+            client.post([path: it], body: data)
+        }
+
+    }
+
+    def delete( params, validations ){
+        execute(params, validations) {
+            client.delete([path: params.resource])
+        }
     }
 
 }
