@@ -5,17 +5,18 @@ import org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport
 import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
 import org.codehaus.groovy.grails.test.GrailsTestTargetPattern
 import groovy.lang.GroovyShell
-import stories.runners.MockRunner
+import stories.junit.JUnitBuilder
 import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.codehaus.groovy.grails.test.junit3.JUnit3GrailsTestTypeRunner
+import org.codehaus.groovy.grails.test.report.junit.JUnitReportsFactory
+import stories.junit.JUnitGrailsStoryTestTypeRunner
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
-    def stories
-    def tests = 0
+    def builder
 
     GrailsStoryTestType(String name, String relativeSourcePath) {
         super(name, relativeSourcePath)
-        stories = []
     }
 
     protected List<String> getTestExtensions() {
@@ -31,18 +32,17 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
         def cl = Thread.currentThread().contextClassLoader
         //loads the shell with the current classLoader so we have all the domain classes, etc.
         def shell = new GroovyShell(cl)
-        def counter = new GrailsStoryCounter()
+        builder = new JUnitBuilder()
 
         eachSourceFile { pattern, file ->
             def source = file.text
             Script story = shell.parse(source)
 
-            stories << story
-            story.metaClass = createEMC(story.class, counter)
+            story.metaClass = createEMC(story.class, builder)
             story.run()
         }
 
-        return counter.tests;
+        return builder.tests;
     }
 
     def createEMC(Class clazz, delegator){
@@ -58,12 +58,11 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
       emc
     }
 
+    protected JUnit3GrailsTestTypeRunner createRunner(GrailsTestEventPublisher eventPublisher) {
+        return new JUnit3GrailsTestTypeRunner(JUnitReportsFactory.createFromBuildBinding(getBuildBinding()), eventPublisher, createSystemOutAndErrSwapper());
+    }
+
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
-        def runner = new MockRunner()
-        stories.each {
-          it.metaClass = createEMC(it.class, runner)
-          it.run()
-        }
-        return runner
+        return new GrailsStoryTypeResult(createRunner(eventPublisher).runTests(builder.suite))
     }
 }
