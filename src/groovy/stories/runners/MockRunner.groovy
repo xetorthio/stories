@@ -10,6 +10,7 @@ class MockRunner implements GrailsTestTypeResult {
     def _after
     def passed = 0
     def failed = 0
+    static sessionFactory
 
     def clientHelper = new StoryRestClientHelper()
 
@@ -32,6 +33,7 @@ class MockRunner implements GrailsTestTypeResult {
 
     def story(name, yield) {
         println "${name}"
+        sessionFactory.currentSession.clear()
         yield()
 
         if (_afterStory){
