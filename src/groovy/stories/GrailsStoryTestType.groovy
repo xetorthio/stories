@@ -1,15 +1,16 @@
 package stories
 
+import groovy.lang.GroovyShell
+import stories.junit.JUnitBuilder
 import org.codehaus.groovy.grails.test.GrailsTestTypeResult
 import org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport
 import org.codehaus.groovy.grails.test.event.GrailsTestEventPublisher
 import org.codehaus.groovy.grails.test.GrailsTestTargetPattern
-import groovy.lang.GroovyShell
-import stories.junit.JUnitBuilder
 import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import org.codehaus.groovy.grails.test.junit3.JUnit3GrailsTestTypeRunner
 import org.codehaus.groovy.grails.test.report.junit.JUnitReportsFactory
+import org.junit.runner.JUnitCore
+import org.codehaus.groovy.grails.test.junit4.listener.SuiteRunListener
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
     def builder
@@ -57,11 +58,17 @@ class GrailsStoryTestType extends GrailsTestTypeSupport {
       emc
     }
 
-    protected JUnit3GrailsTestTypeRunner createRunner(GrailsTestEventPublisher eventPublisher) {
-        return new JUnit3GrailsTestTypeRunner(JUnitReportsFactory.createFromBuildBinding(getBuildBinding()), eventPublisher, createSystemOutAndErrSwapper());
+    protected createJUnitReportsFactory() {
+        JUnitReportsFactory.createFromBuildBinding(buildBinding)
+    }
+
+    protected createListener(eventPublisher) {
+        new SuiteRunListener(eventPublisher, createJUnitReportsFactory(), createSystemOutAndErrSwapper())
     }
 
     GrailsTestTypeResult doRun(GrailsTestEventPublisher eventPublisher) {
-        return new GrailsStoryTypeResult(createRunner(eventPublisher).runTests(builder.suite))
+        def junit = new JUnitCore()
+        junit.addListener(createListener(eventPublisher))
+        new GrailsStoryTypeResult(junit.run(builder.suite))
     }
 }

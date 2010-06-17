@@ -11,9 +11,9 @@ class GrailsStoryTypeResult implements GrailsTestTypeResult {
     }
 
     int getFailCount() {
-        return result.failureCount() + result.errorCount()
+        return result.getFailureCount();
     }
     int getPassCount() {
-        return result.runCount() - getFailCount()
+        return result.getRunCount() - getFailCount()
     }
 }
