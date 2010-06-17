@@ -16,4 +16,8 @@ class StoriesGrailsPlugin {
         'test/**/*'
     ]
     def dependsOn = [:]
+    def doWithApplicationContext = { appCtx ->
+        def sf = appCtx.getBean("sessionFactory")
+        stories.junit.ScenarioTest.sessionFactory = sf
+    }
 }

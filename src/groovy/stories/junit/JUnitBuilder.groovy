@@ -12,8 +12,6 @@ class JUnitBuilder {
     def currentStory = null
     def tests = 0
 
-    //def clientHelper = new StoryRestClientHelper()
-
     def before(yield) {
         _before = yield
     }
@@ -33,38 +31,18 @@ class JUnitBuilder {
 
     def story(name, yield) {
         currentStory = new TestSuite(name)
-        //currentStory.name = name
         suite.addTest(currentStory) 
         yield()
-
-        /*
-        if (_afterStory){
-            _afterStory()
-        }
-        */
     }
 
     def scenario(name, yield) {
-        /*
-        if(_before) {
-            _before()
-        }
-        */
         tests++
-        /*
-        if (clientHelper){
-            yield.delegate = clientHelper
-        }
-        */
+        
         def sc = new ScenarioTest(name)
         sc.code = yield
         sc.name = name
+        sc.before = _before
+        sc.after = _after
         currentStory.addTest(sc)
-
-        /*
-        if(_after) {
-            _after()
-        }
-        */
     }
 }

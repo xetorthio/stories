@@ -10,7 +10,6 @@ import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.codehaus.groovy.grails.test.junit3.JUnit3GrailsTestTypeRunner
 import org.codehaus.groovy.grails.test.report.junit.JUnitReportsFactory
-import stories.junit.JUnitGrailsStoryTestTypeRunner
 
 class GrailsStoryTestType extends GrailsTestTypeSupport {
     def builder
