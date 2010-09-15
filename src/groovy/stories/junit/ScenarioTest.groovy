@@ -24,12 +24,11 @@ class ScenarioTest extends TestCase {
         if (clientHelper){
             code.delegate = clientHelper
         }
-        sessionFactory.currentSession.beginTransaction()
         code()
-        sessionFactory.currentSession.transaction.rollback()
     }
 
     protected void setUp() {
+        sessionFactory.currentSession.beginTransaction()
         if(before) {
             before()
         }
@@ -39,6 +38,7 @@ class ScenarioTest extends TestCase {
         if(after) {
             after()
         }
+        sessionFactory.currentSession.transaction.rollback()
     }
 }
 

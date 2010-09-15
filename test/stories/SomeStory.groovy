@@ -6,6 +6,10 @@ story "This is a story", {
 
     before {
         ranBefore = true;
+        assert Book.findByTitle("Test") == null //This tests that every story is complete independant
+        def b = new Book()
+        b.title = "Test"
+        b.save()
     }
 
     after {
@@ -25,7 +29,7 @@ story "This is a story", {
 
     scenario "It is possible to use domains", {
         def b = new Book()
-        b.title = "Test"
+        b.title = "TestTitle"
         b.save()
         assert b != null;
     }
@@ -39,6 +43,6 @@ story "This is a story", {
     }
 
     scenario "It is transactional", {
-        assert Book.findByTitle("Test") == null
+        assert Book.findByTitle("TestTitle") == null
     }
 }
