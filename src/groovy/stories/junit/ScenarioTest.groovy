@@ -27,8 +27,12 @@ class ScenarioTest extends TestCase {
         code()
     }
 
+
     protected void setUp() {
-        sessionFactory.currentSession.beginTransaction()
+//      transaction = sessionFactory.currentSession.beginTransaction()
+
+//      if (!transaction.isActive())
+//          transaction.begin()
         if(before) {
             before()
         }
@@ -38,7 +42,10 @@ class ScenarioTest extends TestCase {
         if(after) {
             after()
         }
-        sessionFactory.currentSession.transaction.rollback()
+//      println transaction.properties
+//      transaction.rollback() Transactions not working :S
+        sessionFactory.currentSession.clear()
     }
+
 }
 

@@ -14,6 +14,7 @@ story "This is a story", {
 
     after {
         ranAfter = true;
+        Book.executeUpdate("delete Book")
     }
 
     scenario "It is possible to test RESTful services", {
